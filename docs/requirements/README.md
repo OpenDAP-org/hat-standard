@@ -29,7 +29,7 @@ Requirements for the HAT Case Standard.
 
 ## Open questions
 
-- Exposed port set and pinout.
+- Exposed port set and pinout: a functional allocation on the flat-cable connectors is in the [HAT interface v0](../specs/interface-v0.md) (Draft, HCS-021, HCS-022); the pogo-field layout is still open.
 - Mechanical details of the device-side piece and the HAT case.
 
 ## Context
