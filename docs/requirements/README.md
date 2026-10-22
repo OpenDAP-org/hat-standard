@@ -28,6 +28,7 @@ Requirements for the HAT Case Standard.
 | HCS-022 | The interface shall keep a few reserved contacts for future revisions, without displacing essential signals to get them. | must | Confirmed |
 | HCS-023 | The device-side piece (pogo field and its flat cable) shall be an independent accessory of the HAT standard, fitted to the T1 by the user or at assembly and then fixed to it (HCS-012, HCS-020). A T1 without it works fully, and the back cover closes it. | must | Confirmed |
 | HCS-024 | The HAT standard is OpenDAP's own. It takes inspiration from established standards (Raspberry Pi HAT+ and others) and should support them where that costs little, for example by keeping the identity layout compatible with HAT+ so existing tools can read it. | should | Confirmed |
+| HCS-025 | The standard shall define compatibility levels (L1 Core, L2 Control and audio, L3 High speed): devices declare the level they implement, HATs the level they need, and a HAT works on any device of its level or higher (ADR 0003). | must | Confirmed |
 
 ## Open questions
 
