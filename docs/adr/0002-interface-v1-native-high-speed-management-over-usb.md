@@ -1,0 +1,26 @@
+# ADR 0002: Interface v1: native high-speed and safety lines, low-speed I/O over USB
+
+- **Status:** Accepted
+- **Date:** 2026-10-22
+- **Decided by:** Claude, under the maintainers' delegation (HCS-021 hardware-agnostic, HCS-022 reserved contacts, build on standards, BRD-049 safe power)
+
+## Context
+
+Interface v0 carries about 122 pogo contacts, 44 of them native low-speed signals. The [interface reduction research](../research/2026-10-interface-reduction.md) checked every reference HAT and a wide set of plausible future HATs against what each truly needs, and which classes can move behind USB with mainline Linux drivers. The pogo field is also the largest cost line of the device-side piece.
+
+## Decision
+
+1. **Interface v1 is the research's recommended level (v1-R):** about 97 pogo contacts (−20 %), 24 native low-speed signals.
+2. **Native, unchanged:** all high-speed pairs (USB 3, PCIe, MIPI CSI, USB 2 ×2, HCS-004), power and ground with their BRD-049 margins, `HAT_DET#`, the ID EEPROM bus (read before the HAT is powered, by U-Boot too), `HAT_INT#` (wake source and the interrupt for anything behind a bridge), one general I2C (kernel devices described in the device tree, camera control), the PCIe sidebands, SWD and reset (direct flashing and recovery of any HAT MCU, including a bricked bridge, HCS-013), four fast GPIO lines (every one PWM- and interrupt-capable), one I2S/TDM port of 8 lines on the DAC's clock domain, and line out with its analog ground.
+3. **Over USB:** UART, SPI, slow GPIO and JTAG move behind the second USB 2 port, which becomes the HAT's **management port**. The reference bridge protocol is **DLN2**, which has mainline Linux drivers for GPIO with interrupts, I2C, SPI and ADC; OpenDAP publishes open DLN2-compatible firmware for common MCUs, and sends the missing USB ID upstream without waiting for it (udev rule meanwhile). Standard USB classes (CDC-ACM, HID, USB Audio, CMSIS-DAP) are equally valid.
+4. **Removed:** the camera reference clock (camera HATs carry their own oscillator), `CAM_RST#` (becomes a fast GPIO), and line in (the T1 has no input to receive it; recording HATs carry their own ADC).
+5. **One audio clock domain per HAT,** conditional on the RK3566 running the HAT I2S transmit and the DAC path from one shared clock (test on the first prototype). If the test fails, the second domain returns on reserved contacts.
+6. **Scope of BRD-004 and BRD-005:** they govern the T1 main board. HAT hardware follows HCS-013: every programmable HAT chip is flashable and debuggable from OpenDAP OS, natively over SWD or through the management port.
+7. **Board-to-piece connector:** the DF40 signal connector stays at 100 positions, with the freed positions as spares; the cost difference is small (maintainers' rule on small-cost hardware) and spares keep the interface extensible.
+8. **Reserved pogo contacts:** at least 8 % of the field stays reserved (HCS-022).
+
+## Consequences
+
+- No reference HAT breaks; the camera HAT adds an oscillator.
+- Some HAT types get harder (SPI TFT displays, Raspberry-Pi-style prototyping HATs, kernel serial devices needing a native UART, FPGA-only HATs without a probe chip): they use a USB bridge, a standard USB class, or the fast GPIO and I2C lines.
+- The interface spec moves from v0 to v1 (Draft) with the contact list by function; the board pin plan maps the RK3566 onto it.
