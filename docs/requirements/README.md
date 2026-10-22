@@ -24,6 +24,8 @@ Requirements for the HAT Case Standard.
 | HCS-018 | The device-side piece shall be fixed with four M2 screws, and a spring-loaded steel slider lock shall hold the HAT, released by a button on the right edge. | should | Withdrawn |
 | HCS-019 | The lock may use a metal part, as the exception to polymer-first cases. | should | Confirmed |
 | HCS-020 | The device-side piece of the HAT case shall be screwed to the T1. | must | Confirmed |
+| HCS-021 | The standard shall be hardware-agnostic on both sides: it shall not depend on the board or SoC behind the device side, nor on the HAT's hardware, and shall stay valid if the device's board changes completely. Signals are defined by function and interface class, never by a specific SoC pin. | must | Confirmed |
+| HCS-022 | The interface shall keep a few reserved contacts for future revisions, without displacing essential signals to get them. | should | Confirmed |
 
 ## Open questions
 
