@@ -25,7 +25,7 @@ Requirements for the HAT Case Standard.
 | HCS-019 | The lock may use a metal part, as the exception to polymer-first cases. | should | Confirmed |
 | HCS-020 | The device-side piece of the HAT case shall be screwed to the T1. | must | Confirmed |
 | HCS-021 | The standard shall be hardware-agnostic on both sides: it shall not depend on the board or SoC behind the device side, nor on the HAT's hardware, and shall stay valid if the device's board changes completely. Signals are defined by function and interface class, never by a specific SoC pin. | must | Confirmed |
-| HCS-022 | The interface shall keep a few reserved contacts for future revisions, without displacing essential signals to get them. | should | Confirmed |
+| HCS-022 | The interface shall keep a few reserved contacts for future revisions, without displacing essential signals to get them. | must | Confirmed |
 
 ## Open questions
 
@@ -34,6 +34,7 @@ Requirements for the HAT Case Standard.
 
 ## Context
 
+- HCS-022 is must since 2026-10-22 ([priority audit](https://github.com/opendap-project/t1/blob/main/docs/research/2026-10-requirement-priorities.md)): contacts cannot be added once third parties build HATs.
 - The connection from the board to a HAT has two stages: a flat cable from the board to the device-side piece of the HAT case, then from that piece to the HAT hardware.
 - The second stage is all pogo pins ([ADR 0001](../adr/0001-all-pogo-interface-with-fixed-device-side-piece.md)). The benchmark estimates about 120–128 contacts; two rows would be about 81 mm long, more than the device width, so its proposal is a 4 × 32 grid at 1.27 mm (about 41 × 4 mm). Grid, pitch and pinout are not defined yet.
 - The flat cable from the board to the device-side piece is specified by the `board` repository.
