@@ -18,6 +18,8 @@ Interface v1 ([ADR 0002](0002-interface-v1-native-high-speed-management-over-usb
 
 - **Compatibility rule:** a HAT works on any device of its level or higher. A device that receives a HAT needing a higher level says so clearly through OpenDAP OS (T1-045: never silent), and powers nothing it cannot support safely.
 - **Declaration:** a device declares the level it implements; a HAT declares the level it needs in its identity record (HCS-017).
+- **One shared pinout:** all levels use one pogo field and one pinout; each level is a nested subset of the same fixed positions, never a separate connector. The device-side piece keeps one housing and one grid; a lower-level version only populates fewer pins.
+- **Alternate functions (should):** low-speed L2 contacts (the fast GPIO) may declare alternate functions, such as native UART or SPI, in the HAT identity record, set by the SoC pinmux without extra hardware. High-speed, power, ground, detect and ID contacts always keep a fixed function. A device without alternate-function support stays compatible and treats them as GPIO.
 - **Physical zones:** the pogo field is laid out in zones: L1 contacts form a core zone; L2 and L3 extend it. A device-side piece (or another maker's device) implementing L1 populates only the core zone. Reserved contacts (HCS-022) are distributed so every level keeps room to grow.
 - **Conformance:** each level has its own conformance test suite (toolkit-verify), the base for later certification.
 - **The T1 implements L3** (T1-045).
