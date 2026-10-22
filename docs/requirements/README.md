@@ -26,6 +26,7 @@ Requirements for the HAT Case Standard.
 | HCS-020 | The device-side piece of the HAT case shall be screwed to the T1. | must | Confirmed |
 | HCS-021 | The standard shall be hardware-agnostic on both sides: it shall not depend on the board or SoC behind the device side, nor on the HAT's hardware, and shall stay valid if the device's board changes completely. Signals are defined by function and interface class, never by a specific SoC pin. | must | Confirmed |
 | HCS-022 | The interface shall keep a few reserved contacts for future revisions, without displacing essential signals to get them. | must | Confirmed |
+| HCS-023 | The device-side piece (pogo field and its flat cable) shall be an independent accessory of the HAT standard, fitted to the T1 by the user or at assembly and then fixed to it (HCS-012, HCS-020). A T1 without it works fully, and the back cover closes it. | must | Confirmed |
 
 ## Open questions
 
