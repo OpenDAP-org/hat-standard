@@ -20,13 +20,14 @@ Requirements for the HAT Case Standard.
 | HCS-014 | HATs shall be passive at the interface: flat contact pads on the HAT, springs only on the device side. | must | Draft |
 | HCS-015 | Power classes: A and B (the HAT draws power) and F (the HAT is a power source). | must | Draft |
 | HCS-016 | Power-up sequence: presence detect → 3.3 V → read EEPROM → apply overlay → 5 V → switches and high-speed links. | must | Withdrawn |
-| HCS-017 | The EEPROM shall follow the Raspberry Pi HAT+ format, extended with an OpenDAP record: reverse-domain ID, Ed25519 signature and the hash of the capability manifest. | must | Draft |
+| HCS-017 | The EEPROM shall use the OpenDAP HAT identity format: reverse-domain ID, power class, Ed25519 signature and the hash of the capability manifest. | must | Draft |
 | HCS-018 | The device-side piece shall be fixed with four M2 screws, and a spring-loaded steel slider lock shall hold the HAT, released by a button on the right edge. | should | Withdrawn |
 | HCS-019 | The lock may use a metal part, as the exception to polymer-first cases. | should | Confirmed |
 | HCS-020 | The device-side piece of the HAT case shall be screwed to the T1. | must | Confirmed |
 | HCS-021 | The standard shall be hardware-agnostic on both sides: it shall not depend on the board or SoC behind the device side, nor on the HAT's hardware, and shall stay valid if the device's board changes completely. Signals are defined by function and interface class, never by a specific SoC pin. | must | Confirmed |
 | HCS-022 | The interface shall keep a few reserved contacts for future revisions, without displacing essential signals to get them. | must | Confirmed |
 | HCS-023 | The device-side piece (pogo field and its flat cable) shall be an independent accessory of the HAT standard, fitted to the T1 by the user or at assembly and then fixed to it (HCS-012, HCS-020). A T1 without it works fully, and the back cover closes it. | must | Confirmed |
+| HCS-024 | The HAT standard is OpenDAP's own. It takes inspiration from established standards (Raspberry Pi HAT+ and others) and should support them where that costs little, for example by keeping the identity layout compatible with HAT+ so existing tools can read it. | should | Confirmed |
 
 ## Open questions
 
@@ -35,6 +36,7 @@ Requirements for the HAT Case Standard.
 
 ## Context
 
+- HCS-017 and HCS-024 (maintainers, 2026-10-22): the standard is OpenDAP's own; compatibility with Raspberry Pi HAT+ and other standards is a *should*, not a constraint.
 - HCS-022 is must since 2026-10-22 ([priority audit](https://github.com/opendap-project/t1/blob/main/docs/research/2026-10-requirement-priorities.md)): contacts cannot be added once third parties build HATs.
 - The connection from the board to a HAT has two stages: a flat cable from the board to the device-side piece of the HAT case, then from that piece to the HAT hardware.
 - The second stage is all pogo pins ([ADR 0001](../adr/0001-all-pogo-interface-with-fixed-device-side-piece.md)). The benchmark estimates about 120–128 contacts; two rows would be about 81 mm long, more than the device width, so its proposal is a 4 × 32 grid at 1.27 mm (about 41 × 4 mm). Grid, pitch and pinout are not defined yet.
