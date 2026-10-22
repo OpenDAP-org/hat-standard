@@ -1,6 +1,8 @@
 # HAT interface v0
 
-- **Status:** Draft. Nothing here is built or measured. Contact positions follow the current board allocation (board BOM v1.2, line 66) and may be reordered inside a group after the flat-cable signal-integrity test coupon.
+> **Superseded by the [HAT interface v1](interface-v1.md) (2026-10-22, [ADR 0002](../adr/0002-interface-v1-native-high-speed-management-over-usb.md), [ADR 0003](../adr/0003-compatibility-levels.md)).** Kept as history; do not design against it.
+
+- **Status:** Superseded (was Draft). Nothing here is built or measured. Contact positions follow the current board allocation (board BOM v1.2, line 66) and may be reordered inside a group after the flat-cable signal-integrity test coupon.
 - **Date:** 2026-10-22
 - **Requirements:** HCS-001 to HCS-022, in particular HCS-004 (no cap on high-speed rates), HCS-006 (one interconnect type), HCS-007 (identification EEPROM), HCS-021 (hardware-agnostic) and HCS-022 (reserved contacts).
 - **Decisions:** [ADR 0001](../adr/0001-all-pogo-interface-with-fixed-device-side-piece.md) (all-pogo interface, fixed device-side piece); board ADR 0002 (the signals reach the device-side piece over a flat cable).
