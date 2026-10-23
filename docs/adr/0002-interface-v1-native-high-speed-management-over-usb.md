@@ -16,7 +16,7 @@ Interface v0 carries about 122 pogo contacts, 44 of them native low-speed signal
 4. **PCIe stays, next to USB 3.** On the RK3566 they come from separate PHYs (Multi-PHY2 and Multi-PHY1), so a HAT gets two independent 5 Gb/s channels at once: the NAS HAT (NAS-005, NAS-006) runs NVMe on PCIe and 2.5G Ethernet on USB 3 without sharing a lane, and BRD-045 rules out an on-board PCIe switch. PCIe-only devices (M.2 AI accelerators such as Hailo-8/8L, M.2 Wi-Fi 6E/7 cards) and FPGA endpoints need it, and dropping it would cap HATs to one 5 Gb/s link (T1-045, HCS-004).
 5. **Removed:** the camera reference clock (camera HATs carry their own oscillator), `CAM_RST#` (becomes a fast GPIO), and line in (the T1 has no input to receive it; recording HATs carry their own ADC).
 6. **One audio clock domain per HAT,** conditional on the RK3566 running the HAT I2S transmit and the DAC path from one shared clock (test on the first prototype). If the test fails, the second domain returns on reserved contacts.
-7. **Scope of BRD-004 and BRD-005:** they govern the T1 main board. HAT hardware follows HCS-013: every programmable HAT chip is flashable and debuggable from OpenDAP OS, natively over SWD or through the management port.
+7. **Scope of BRD-004 and BRD-005:** they govern the T1 main board. HAT hardware follows HCS-013: every programmable HAT chip is flashable and debuggable from Blackbird OS, natively over SWD or through the management port.
 8. **Board-to-piece connector:** the DF40 signal connector stays at 100 positions, with the freed positions as spares; the cost difference is small (maintainers' rule on small-cost hardware) and spares keep the interface extensible.
 9. **Reserved pogo contacts:** at least 8 % of the field stays reserved (HCS-022).
 

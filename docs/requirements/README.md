@@ -13,10 +13,10 @@ Requirements for the HAT Case Standard.
 | HCS-007 | A HAT shall identify itself through an on-board EEPROM. | must | Confirmed |
 | HCS-008 | There shall be no central registry of manufacturer or vendor IDs. | must | Confirmed |
 | HCS-009 | The EEPROM shall carry a capability manifest in a standard schema. | must | Confirmed |
-| HCS-010 | The capability manifest shall be signed, and OpenDAP OS shall verify it. | must | Confirmed |
-| HCS-011 | The capability manifest shall work with the OpenDAP OS package repository mechanism (reverse-domain, well-known HTTP, through the package endpoint). | must | Confirmed |
+| HCS-010 | The capability manifest shall be signed, and Blackbird OS shall verify it. | must | Confirmed |
+| HCS-011 | The capability manifest shall work with the Blackbird OS package repository mechanism (reverse-domain, well-known HTTP, through the package endpoint). | must | Confirmed |
 | HCS-012 | The device-side piece shall be fixed to the T1; only the HAT is swapped. | must | Confirmed |
-| HCS-013 | The standard shall support HATs carrying microcontrollers, FPGAs or another SoC, which OpenDAP OS can flash, operate and debug. | must | Confirmed |
+| HCS-013 | The standard shall support HATs carrying microcontrollers, FPGAs or another SoC, which Blackbird OS can flash, operate and debug. | must | Confirmed |
 | HCS-014 | HATs shall be passive at the interface: flat contact pads on the HAT, springs only on the device side. | must | Draft |
 | HCS-015 | Power classes: A and B (the HAT draws power) and F (the HAT is a power source). | must | Draft |
 | HCS-016 | Power-up sequence: presence detect → 3.3 V → read EEPROM → apply overlay → 5 V → switches and high-speed links. | must | Withdrawn |

@@ -16,7 +16,7 @@ Interface v1 ([ADR 0002](0002-interface-v1-native-high-speed-management-over-usb
 | **L2 Control and audio** | L1 + I2S/TDM on the DAC's clock domain, line out, four fast GPIO (PWM and interrupt capable), SWD and reset | Audio interfaces and amplifiers, recorders, instruments, debuggable MCU boards |
 | **L3 High speed** | L2 + PCIe + MIPI CSI | NAS (NVMe + Ethernet), cameras, AI accelerators, M.2 radios |
 
-- **Compatibility rule:** a HAT works on any device of its level or higher. A device that receives a HAT needing a higher level says so clearly through OpenDAP OS (T1-045: never silent), and powers nothing it cannot support safely.
+- **Compatibility rule:** a HAT works on any device of its level or higher. A device that receives a HAT needing a higher level says so clearly through Blackbird OS (T1-045: never silent), and powers nothing it cannot support safely.
 - **Declaration:** a device declares the level it implements; a HAT declares the level it needs in its identity record (HCS-017).
 - **One shared pinout:** all levels use one pogo field and one pinout; each level is a nested subset of the same fixed positions, never a separate connector. The device-side piece keeps one housing and one grid; a lower-level version only populates fewer pins.
 - **Alternate functions (should):** low-speed L2 contacts (the fast GPIO) may declare alternate functions, such as native UART or SPI, in the HAT identity record, set by the SoC pinmux without extra hardware. High-speed, power, ground, detect and ID contacts always keep a fixed function. A device without alternate-function support stays compatible and treats them as GPIO.

@@ -24,7 +24,7 @@ The interface has two stages:
 | **L3 High speed** | PCIe x1 with its sidebands (`PCIE_*`), MIPI CSI-2 4-lane (`CSI_*`) | L3 zone: rows A–B columns 1–16, row C even columns 2–16 | 40 | 96 | 10 (10.4 %) |
 
 - **One field, one pinout:** the three levels share one pogo field and one pinout. Each level is a nested subset of the same fixed positions; there is no connector or pinout per level. An L1 HAT on an L3 device uses only the core zone; an L3 HAT on an L1 device finds its L1 contacts in the same place.
-- **Compatibility rule (ADR 0003):** a HAT works on any device of its level or higher. A device that receives a HAT needing a higher level says so clearly through OpenDAP OS (T1-045: never silent), and powers nothing it cannot support safely. The ID EEPROM is in L1, so every device can read the level a HAT needs before it enables `HAT_5V`.
+- **Compatibility rule (ADR 0003):** a HAT works on any device of its level or higher. A device that receives a HAT needing a higher level says so clearly through Blackbird OS (T1-045: never silent), and powers nothing it cannot support safely. The ID EEPROM is in L1, so every device can read the level a HAT needs before it enables `HAT_5V`.
 - **Declaration:** a device declares the level it implements. A HAT declares the level it needs in its identity record (HCS-017): the record carries an **interface level** field (`1`, `2` or `3`) next to the interface revision (`1` for this document). The byte layout is defined with the OpenDAP HAT identity format, which is not specified yet (§10).
 - **Device-side piece:** a device of level N populates the zones up to N. An L1 device-side piece carries only the core zone (32 contacts). An L2 piece carries 56. Unpopulated positions keep the same grid, so the core zone sits at the same place on every piece.
 - **HAT side:** a HAT carries pads for the zones up to its level. Under the zones above its level it has no exposed copper, so the pogo contacts of a higher-level device touch nothing.
@@ -96,7 +96,7 @@ Native low-speed signals: 24, including `HAT_DET#` (v0: 44): 6 in L1, 15 in L2, 
 | UART B | — | — | TX (out) | RX (in) |
 | SPI controller | SCLK (out) | MOSI (out) | MISO (in) | CS0# (out) |
 
-- **Device support is optional.** A device declares which alternates it supports. A device that supports none stays compatible: it treats the lines as plain GPIO. A HAT function that depends on an alternate the device lacks is then unavailable or reached another way (for example over USB), and OpenDAP OS says so (T1-045).
+- **Device support is optional.** A device declares which alternates it supports. A device that supports none stays compatible: it treats the lines as plain GPIO. A HAT function that depends on an alternate the device lacks is then unavailable or reached another way (for example over USB), and Blackbird OS says so (T1-045).
 - **Levels and defaults:** the alternates belong to L2. Each line starts as a GPIO input after power-up and changes function only after the device has read the identity record.
 - **T1:** the GPIO balls offer UART A and UART B; SPI is not available on them (board pin plan §4.3).
 
@@ -178,7 +178,7 @@ Single-purpose bridge chips with fixed USB IDs and mainline drivers (for example
 The reference protocol for GPIO, I2C, SPI and ADC behind USB is **DLN2** (ADR 0002).
 
 - **Linux:** mainline drivers `MFD_DLN2` (core), `GPIO_DLN2` (GPIO with interrupts), `I2C_DLN2`, `SPI_DLN2` and `DLN2_ADC`, with no ACPI dependency, so they work on a device-tree system (research §3.2, read 2026-10-22).
-- **USB ID:** the mainline `dln2` ID table holds only `a257:2013`. Until OpenDAP's ID patch is merged upstream, OpenDAP OS binds other IDs with a udev rule (`new_id`). The USB ID OpenDAP firmware uses is not assigned yet (§10).
+- **USB ID:** the mainline `dln2` ID table holds only `a257:2013`. Until OpenDAP's ID patch is merged upstream, Blackbird OS binds other IDs with a udev rule (`new_id`). The USB ID OpenDAP firmware uses is not assigned yet (§10).
 - **Firmware:** OpenDAP publishes open DLN2-compatible firmware for common MCUs (ADR 0002). An existing open implementation for the RP2040, `notro/pico-usb-io-board` (CC0, ID `1d50:6170`), also exposes CDC-ACM UARTs.
 - **Composite use:** one MCU can expose DLN2, CDC-ACM and CMSIS-DAP at once.
 
@@ -353,7 +353,7 @@ No reference HAT needs the removed second USB 2.0 port: each has at most one USB
 ## 10. Open points
 
 1. **Power classes** A, B, F (HCS-015, Draft): current per class against §5, the `HAT_5V` voltage window and the direction handshake.
-2. **Identity format** (HCS-017, Draft): byte layout of the interface level, interface revision and GPIO alternate-function fields, and HAT+ readability (HCS-024). How a device declares its level and supported alternates to OpenDAP OS.
+2. **Identity format** (HCS-017, Draft): byte layout of the interface level, interface revision and GPIO alternate-function fields, and HAT+ readability (HCS-024). How a device declares its level and supported alternates to Blackbird OS.
 3. **Line output:** full-scale level, source and load impedance (v0 open point 2, output side; the input side is closed by its removal).
 4. **Pull-up ownership** on `I2C_*`, `ID_*`, `HAT_INT#`, `HAT_RST#` and the PCIe sidebands.
 5. **High-speed channel budget** (flat cable + DF40 + pogo + HAT pads): DF40 rate rating **UNVERIFIED**; a test coupon is required before freeze (board BOM line 66). The coupon also decides the fence pattern of §7.1 (vertical pairs, row C under the pairs without grounds) and whether some spare DF40 positions become grounds.

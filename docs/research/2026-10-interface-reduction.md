@@ -302,7 +302,7 @@ Any HAT that adds a bridge also adds a USB 2 pair route from the pads to the bri
 | HCS-004, HCS-005 | **Confirmed** | High-speed unchanged. Low-speed removals justified in §4.1; audio and JTAG need sign-off (§4.3) | Plus audio over UAC2 and flashing over USB |
 | HCS-006 | **Confirmed** | No change | No change |
 | HCS-007 to HCS-011 | **Confirmed** | No change (ID bus native) | No change |
-| HCS-013 (MCUs, FPGAs, SoCs flashed, operated and debugged from OpenDAP OS) | **Confirmed** | Met: SWD native, JTAG through a HAT-side probe. The standard would need a rule that FPGAs are reachable through a CMSIS-DAP or FTDI-class probe or through the HAT MCU | Needs a rule that every programmable HAT has a ROM-loader controller (§5.5) |
+| HCS-013 (MCUs, FPGAs, SoCs flashed, operated and debugged from Blackbird OS) | **Confirmed** | Met: SWD native, JTAG through a HAT-side probe. The standard would need a rule that FPGAs are reachable through a CMSIS-DAP or FTDI-class probe or through the HAT MCU | Needs a rule that every programmable HAT has a ROM-loader controller (§5.5) |
 | HCS-015 (power classes) | Draft | No change | No change |
 | HCS-021, HCS-022 | **Confirmed** | Met: signals by function; 7 reserved contacts kept | Met with 5 reserved |
 | HCS-023 (device-side piece as an accessory) | **Confirmed** | Smaller, lighter accessory: about 25 fewer pogo pins and ESD channels, and a shorter pogo field | More so |
