@@ -23,7 +23,7 @@ Scope: the second stage of the HAT path (device-side piece in the HAT case → H
 
 ### 1.1 What the SoC actually exposes
 
-From the board research ([`board/docs/research/2026-10-soc-dac-pmic.md`](../../../board/docs/research/2026-10-soc-dac-pmic.md), not yet a decision):
+From the board research ([`board/docs/research/2026-10-soc-dac-pmic.md`](https://github.com/opendap-project/board/blob/main/docs/research/2026-10-soc-dac-pmic.md), not yet a decision):
 
 | Interface | i.MX 8M Plus (primary candidate) | RK3576 (alternative) | Line rate the interconnect must carry |
 |---|---|---|---|
