@@ -3,7 +3,8 @@
 - **Status:** Draft. Nothing here is built or measured. It supersedes the [HAT interface v0](interface-v0.md), which stays as history. Contact positions may be reordered inside a group after the signal-integrity test coupon (§10).
 - **Date:** 2026-10-22
 - **Requirements:** HCS-001 to HCS-025, in particular HCS-004 (no cap on high-speed rates), HCS-005 (compromises justified), HCS-006 (one interconnect type), HCS-007 and HCS-017 (identification EEPROM, OpenDAP HAT identity format), HCS-013 (programmable HAT chips), HCS-015 (power classes, Draft), HCS-021 (hardware-agnostic), HCS-022 (reserved contacts), HCS-023 (device-side piece), HCS-024 (compatibility with other standards where cheap) and HCS-025 (compatibility levels).
-- **Decisions:** [ADR 0001](../adr/0001-all-pogo-interface-with-fixed-device-side-piece.md) (all-pogo interface, fixed device-side piece); [ADR 0002](../adr/0002-interface-v1-native-high-speed-management-over-usb.md) (interface v1: native high-speed and safety lines, low-speed I/O over USB, one USB port); [ADR 0003](../adr/0003-compatibility-levels.md) (compatibility levels L1–L3 and pogo zones); board ADR 0002 (the signals reach the device-side piece over a flat cable). The justification of each removal (HCS-005) is in the [interface reduction research](../research/2026-10-interface-reduction.md) §4.
+- **Decisions:** [ADR 0001](../adr/0001-all-pogo-interface-with-fixed-device-side-piece.md) (all-pogo interface, fixed device-side piece); [ADR 0002](../adr/0002-interface-v1-native-high-speed-management-over-usb.md) (interface v1: native high-speed and safety lines, low-speed I/O over USB, one USB port); [ADR 0003](../adr/0003-compatibility-levels.md) (compatibility levels L1–L3 and pogo zones); [ADR 0004](../adr/0004-pogo-part-and-field-geometry.md) (pogo part and field geometry: 4 × 25 at 2.54 mm, Harwin P70, Mill-Max 0965 second source); board ADR 0002 (the signals reach the device-side piece over a flat cable). The justification of each removal (HCS-005) is in the [interface reduction research](../research/2026-10-interface-reduction.md) §4.
+- **Note (2026-10-24):** the field is 4 × 25 = 100 positions at 2.54 mm (ADR 0002 amendment, ADR 0004), not the 4 × 24 = 96 of the first draft. The 96 positions of §7.1 keep their assignment; the 4 added positions are reserved in L2, and where they sit in the grid is open (§10).
 - **Conventions:** **UNVERIFIED** = no primary source checked. "Device" is the product the HAT attaches to (the T1 today); "HAT" is the accessory. Directions are written from the device: *out* = device to HAT, *in* = HAT to device.
 
 ## 1. Scope
@@ -12,7 +13,7 @@ This document defines the HAT interface by **compatibility level**, **function**
 
 The interface has two stages:
 
-1. the **pogo field** on the device-side piece, against flat pads on the HAT (ADR 0001, HCS-014): up to 96 contacts in a 4 × 24 grid, in three zones (§7.1). This is the interface a HAT designer works with;
+1. the **pogo field** on the device-side piece, against flat pads on the HAT (ADR 0001, HCS-014): up to 100 contacts in a 4 × 25 grid at 2.54 mm, in three zones (§7.1). This is the interface a HAT designer works with;
 2. on the T1, a **flat cable** from the board to the device-side piece, with two Hirose DF40 connector pairs: a 100-position **signal connector** and a 50-position **power connector** (§7.2, §7.3). These positions matter to device and device-side piece designers only. Another device may connect its pogo field differently.
 
 ## 2. Compatibility levels
@@ -20,13 +21,13 @@ The interface has two stages:
 | Level | Functions (adds to the level below) | Zone | Pogo contacts in the zone | Cumulative | Reserved, cumulative |
 |---|---|---|---|---|---|
 | **L1 Core** | Power by class (`HAT_5V`, `HAT_3V3`, `GND`), presence (`HAT_DET#`), interrupt and wake (`HAT_INT#`), ID EEPROM (`ID_*`), general I2C (`I2C_*`), the USB 3 port with its USB 2 half (`USB3_*`), through which every management function reaches the device (§6) | Core zone: columns 17–24, all rows | 32 | 32 | 3 (9.4 %) |
-| **L2 Control and audio** | Digital audio on the device's DAC clock domain (`I2S_*`), line out (`LINE_OUT_*`, `AGND`), four fast GPIO (`GPIO0`–`GPIO3`), SWD and reset (`DBG_*`, `HAT_RST#`) | L2 zone: row C odd columns 1–15, row D columns 1–16 | 24 | 56 | 5 (8.9 %) |
-| **L3 High speed** | PCIe x1 with its sidebands (`PCIE_*`), MIPI CSI-2 4-lane (`CSI_*`) | L3 zone: rows A–B columns 1–16, row C even columns 2–16 | 40 | 96 | 10 (10.4 %) |
+| **L2 Control and audio** | Digital audio on the device's DAC clock domain (`I2S_*`), line out (`LINE_OUT_*`, `AGND`), four fast GPIO (`GPIO0`–`GPIO3`), SWD and reset (`DBG_*`, `HAT_RST#`) | L2 zone: row C odd columns 1–15, row D columns 1–16, and 4 reserved positions not yet placed (§10) | 28 | 60 | 9 (15.0 %) |
+| **L3 High speed** | PCIe x1 with its sidebands (`PCIE_*`), MIPI CSI-2 4-lane (`CSI_*`) | L3 zone: rows A–B columns 1–16, row C even columns 2–16 | 40 | 100 | 14 (14.0 %) |
 
 - **One field, one pinout:** the three levels share one pogo field and one pinout. Each level is a nested subset of the same fixed positions; there is no connector or pinout per level. An L1 HAT on an L3 device uses only the core zone; an L3 HAT on an L1 device finds its L1 contacts in the same place.
 - **Compatibility rule (ADR 0003):** a HAT works on any device of its level or higher. A device that receives a HAT needing a higher level says so clearly through Blackbird OS (T1-045: never silent), and powers nothing it cannot support safely. The ID EEPROM is in L1, so every device can read the level a HAT needs before it enables `HAT_5V`.
 - **Declaration:** a device declares the level it implements. A HAT declares the level it needs in its identity record (HCS-017): the record carries an **interface level** field (`1`, `2` or `3`) next to the interface revision (`1` for this document). The byte layout is defined with the OpenDAP HAT identity format, which is not specified yet (§10).
-- **Device-side piece:** a device of level N populates the zones up to N. An L1 device-side piece carries only the core zone (32 contacts). An L2 piece carries 56. Unpopulated positions keep the same grid, so the core zone sits at the same place on every piece.
+- **Device-side piece:** a device of level N populates the zones up to N. An L1 device-side piece carries only the core zone (32 contacts). An L2 piece carries 60. Unpopulated positions keep the same grid, so the core zone sits at the same place on every piece.
 - **HAT side:** a HAT carries pads for the zones up to its level. Under the zones above its level it has no exposed copper, so the pogo contacts of a higher-level device touch nothing.
 - **Conformance:** each level has its own conformance test suite (toolkit-verify), as ADR 0003 sets out; the suites are not written yet.
 - **The T1 implements L3.**
@@ -47,8 +48,8 @@ The interface has two stages:
 | Digital audio | I2S with either side as clock provider (5) + TDM in on a HAT clock (6): two clock domains | one port of 8 lines on the device's DAC clock domain | §4.2 |
 | Line in (`LINE_IN_L`, `LINE_IN_R`) | 2 | removed | An ADC on the HAT, through the audio port or USB Audio |
 | GPIO alternate functions | none | UART or SPI on `GPIO0`–`GPIO3`, declared by the HAT (should) | §4.3 |
-| Reserved | 7 (2 signal + 5 power connector) | 10 (5 + 5), spread over the levels | §8 |
-| Pogo field | not defined (estimate ≈ 122) | 96 contacts in zones, positions fixed | §7.1 |
+| Reserved | 7 (2 signal + 5 power connector) | 14 on the pogo field, spread over the levels; 10 of them with T1 flat-cable positions (5 + 5) | §8 |
+| Pogo field | not defined (estimate ≈ 122) | 100 contacts (4 × 25 at 2.54 mm) in zones; 96 positions fixed, 4 L2 reserved positions to place | §7.1 |
 | DF40 signal connector | 96 of 96 used | 72 used, 24 spare | §7.2 |
 | DF40 power connector | 46 of 46 | unchanged | §7.3 |
 
@@ -110,11 +111,11 @@ Native low-speed signals: 24, including `HAT_DET#` (v0: 44): 6 in L1, 15 in L2, 
 | Analog (line out L/R + 2 `AGND`) | — | 4 | — | **4** | 4 | — |
 | Low-speed grounds | — | 3 | — | **3** | 5 | — |
 | `HAT_5V` / `HAT_3V3` / power `GND` | 3 / 2 / 4 | — | — | **3 / 2 / 4** | — | 12 / 6 / 22 |
-| Reserved | 3 | 2 | 5 | **10 (10.4 %)** | 5 | 5 |
-| **Assigned** | **32** | **24** | **40** | **96** | **72 of 96 usable** | **46 of 46 usable** |
+| Reserved | 3 | 6 | 5 | **14 (14.0 %)** | 5 | 5 |
+| **Assigned** | **32** | **28** | **40** | **100** | **72 of 96 usable** | **46 of 46 usable** |
 | Spare (no interface function) | — | — | — | 0 | 24 | 0 |
 
-ADR 0002 estimated about 93 pogo contacts (7 reserved, about 22 fence grounds, 5 low-speed grounds). The zoned grid gives 96: 10 reserved, so that every level keeps at least 8 % (ADR 0002, ADR 0003); 24 fence grounds, because the L1 band must be fenced on its own; and 3 low-speed grounds, because the L1 lines sit next to power returns.
+ADR 0002 estimated about 93 pogo contacts (7 reserved, about 22 fence grounds, 5 low-speed grounds). The zoned grid gives 96: 10 reserved, so that every level keeps at least 8 % (ADR 0002, ADR 0003); 24 fence grounds, because the L1 band must be fenced on its own; and 3 low-speed grounds, because the L1 lines sit next to power returns. The ADR 0002 amendment then grows the field to 4 × 25 = 100, the 4 added positions reserved in L2 (§8).
 
 ## 5. Power and ground
 
@@ -137,7 +138,7 @@ Margin rule (board BRD-049): each contact at or below **70 % of its rating in co
 | | | `HAT_3V3` ×6 | 0.17 A (56 %) | — | 0.30 A (100 %) | — |
 | | | `GND` ×22 | 0.14 A (45 %) | — | 0.25 A (82 %) | — |
 
-- **Pogo count rule (v0 §3):** the fewest contacts that stay at or below 70 % of the pogo rating at the interface rating, plus one for redundancy: `HAT_5V` 2 + 1, `HAT_3V3` 1 + 1, `GND` 3 + 1. Each rail stays inside the rule with one contact open. The fence and low-speed grounds are not counted as power returns. If another pogo part is qualified (§10), the counts are re-checked against its rating.
+- **Pogo count rule (v0 §3):** the fewest contacts that stay at or below 70 % of the pogo rating at the interface rating, plus one for redundancy: `HAT_5V` 2 + 1, `HAT_3V3` 1 + 1, `GND` 3 + 1. Each rail stays inside the rule with one contact open. The fence and low-speed grounds are not counted as power returns. The second source, Mill-Max 0965, has the same 2 A rating (ADR 0004); any other part is re-checked against its rating.
 - **Device duties.** The device limits each rail it sources with a current limiter whose maximum trip current stays inside the fault ceiling, and limits current drawn from a class F HAT on `HAT_5V` the same way. It enables `HAT_5V` only after reading the HAT EEPROM, and only for a HAT whose level and power class it supports. A device may set lower limits; the T1's are in the board [power tree §4.6](https://github.com/opendap-project/board/blob/main/docs/specs/power-tree-v0.md).
 - **HAT duties.** The HAT powers its EEPROM from `HAT_3V3`. Bulk capacitance on each rail stays at or below 470 µF (board power tree §4.6; **Draft**). USB devices on a HAT are self-powered and take their VBUS-sense input from `HAT_5V` or `HAT_3V3`: the interface has no VBUS contact.
 - **Flat cable (T1).** Its power and ground conductors are sized for the interface rating (board BOM line 102).
@@ -195,14 +196,14 @@ Functions that need any of these properties use the native lines (§4.1).
 
 ## 7. Contact positions
 
-### 7.1 Pogo field (96 contacts, 4 × 24, three zones)
+### 7.1 Pogo field (100 contacts, 4 × 25 at 2.54 mm, three zones)
 
-Positions are given looking at the pogo tips on the device-side piece: rows A to D, row A nearest the flat-cable tail; columns 1 to 24. The HAT pad map is the mirror image of this table. Every populated position uses the same pogo part (HCS-006). The pitch is open (§10).
+Positions are given looking at the pogo tips on the device-side piece: rows A to D, row A nearest the flat-cable tail; columns 1 to 24 in the table below. The HAT pad map is the mirror image of this table. Every populated position uses the same pogo part (HCS-006): Harwin P70, with Mill-Max 0965 as the second source on the same pads, at **2.54 mm** pitch, the field lying along the body's length (ADR 0004). The field has 4 × 25 = 100 positions (ADR 0002 amendment): the table assigns 96; the other 4 are reserved in L2, and their place in the grid is open (§10). The L1 core zone stays one contiguous end of the field (ADR 0004).
 
 | Zone | Positions | Contacts |
 |---|---|---|
 | L1 core | columns 17–24, rows A–D | 32 |
-| L2 | row C, odd columns 1–15; row D, columns 1–16 | 24 |
+| L2 | row C, odd columns 1–15; row D, columns 1–16; 4 reserved positions not yet placed | 28 |
 | L3 | rows A–B, columns 1–16; row C, even columns 2–16 | 40 |
 
 Layout rules:
@@ -242,12 +243,12 @@ Layout rules:
 Count by zone:
 
 - **L1 (32):** 6 USB 3 signals + 8 fence `GND` (columns 17, 19, 21, 23, rows A–B) + `HAT_5V` 3 + `HAT_3V3` 2 + power `GND` 4 (C23, D20, D23, D24) + 6 low-speed signals + 3 reserved.
-- **L2 (24):** 8 I2S + 4 GPIO + 3 debug and reset + 4 analog + 3 low-speed `GND` (D5, D8, D16) + 2 reserved.
+- **L2 (28):** 8 I2S + 4 GPIO + 3 debug and reset + 4 analog + 3 low-speed `GND` (D5, D8, D16) + 6 reserved (2 placed, 4 not yet placed).
 - **L3 (40):** 16 PCIe and CSI-2 signals + 16 fence `GND` (columns 1–15 odd, rows A–B) + 3 PCIe sidebands + 5 reserved.
 
 All `GND` contacts are one net; the split into fence, power and low-speed grounds is a counting convention.
 
-Spring force with the P70-1000045R (0.88 N ± 0.29 N at normal working height, drawing P70-10X0045R): 96 × 0.88 N ≈ 84 N (57–112 N) for an L3 piece, 32 × 0.88 N ≈ 28 N (19–37 N) for an L1 piece. The HAT retention and the case carry it.
+Spring force with the P70-1000045R (0.88 N ± 0.29 N at normal working height, drawing P70-10X0045R): 100 × 0.88 N ≈ 88 N (59–117 N) for an L3 piece, 32 × 0.88 N ≈ 28 N (19–37 N) for an L1 piece. The HAT retention and the case carry it.
 
 ### 7.2 DF40 signal connector (T1; 100 positions, 96 usable)
 
@@ -330,7 +331,7 @@ Count: `HAT_5V` 12 + `HAT_3V3` 6 + `GND` 22 + `HAT_DET#` 1 + reserved 5 = 46.
 
 ## 8. Reserved contacts and spare positions
 
-- **Reserved contacts (HCS-022):** 10 of 96 pogo contacts (10.4 %), spread so that every level keeps at least 8 % of its cumulative field (ADR 0002, ADR 0003): L1 `RSVD_P0`–`RSVD_P2` (D17–D19); L2 `RSVD_P3`, `RSVD_P4` (C1, C3); L3 `RSVD_S0`–`RSVD_S4` (C2–C10, even). No essential signal was displaced to get them. On the T1 each has a flat-cable position: `RSVD_S0`–`RSVD_S4` on the signal connector (60–68, even), `RSVD_P0`–`RSVD_P4` on the power connector (5, 31, 45, 47, 48, low-speed only). The L3 reserved contacts sit under high-speed pairs, so a later assignment there is a static or slow function.
+- **Reserved contacts (HCS-022):** 14 of 100 pogo contacts (14.0 %), spread so that every level keeps at least 8 % of its cumulative field (ADR 0002 and its amendment, ADR 0003): L1 `RSVD_P0`–`RSVD_P2` (D17–D19); L2 `RSVD_P3`, `RSVD_P4` (C1, C3) and the 4 positions added by the 4 × 25 field (not yet placed, §10); L3 `RSVD_S0`–`RSVD_S4` (C2–C10, even). No essential signal was displaced to get them. On the T1 each has a flat-cable position: `RSVD_S0`–`RSVD_S4` on the signal connector (60–68, even), `RSVD_P0`–`RSVD_P4` on the power connector (5, 31, 45, 47, 48, low-speed only). The L3 reserved contacts sit under high-speed pairs, so a later assignment there is a static or slow function.
 - **Rules:** a device leaves reserved contacts unconnected or tied through ≥ 100 kΩ to `GND`; a HAT leaves them unconnected. A later revision of this interface assigns them, inside their level; a HAT declares the interface revision it was built for in its identity record.
 - **Spare positions (T1):** the 24 spare positions on the DF40 signal connector (§7.2) have no pogo contact and no interface function. The board and the device-side piece leave them unconnected. They let a later revision grow, together with a new device-side piece (HCS-023), without a new flat-cable connector (ADR 0002).
 
@@ -358,16 +359,16 @@ No reference HAT needs the removed second USB 2.0 port: each has at most one USB
 4. **Pull-up ownership** on `I2C_*`, `ID_*`, `HAT_INT#`, `HAT_RST#` and the PCIe sidebands.
 5. **High-speed channel budget** (flat cable + DF40 + pogo + HAT pads): DF40 rate rating **UNVERIFIED**; a test coupon is required before freeze (board BOM line 66). The coupon also decides the fence pattern of §7.1 (vertical pairs, row C under the pairs without grounds) and whether some spare DF40 positions become grounds.
 6. **DF40 contact numbering** (§7.2) against the Hirose drawing.
-7. **Pogo pitch and part.** The research assumed a 1.27 mm pitch (4 × 24 ≈ 29 × 3.8 mm of contact centres). The pin on the board BOM (Harwin P70-1000045R, line 67) has a Ø 2.00 mm flange and a Ø 2.20 mm recommended pad, so it cannot sit on a 1.27 mm grid; at a pitch that fits it (for example 2.54 mm) the field is about 58 × 7.6 mm. The pitch is set when the pogo part is qualified (benchmark proposal 1: qualify two vendors against one envelope).
-8. **Audio clock domain:** one domain per HAT, on the device's DAC clock, holds only if the first T1 prototype runs the HAT port's transmit and receive from the DAC's clock (ADR 0002). If the test fails, the second domain returns on reserved contacts. Two of the five L2-or-lower reserved contacts would leave L2 at 3 of 56 (5.4 %), below 8 %, unless the field grows.
+7. **The four added L2 reserved positions:** where they sit in the 4 × 25 grid, and whether they get T1 flat-cable positions. Pitch and part are decided (ADR 0004: 2.54 mm, Harwin P70, Mill-Max 0965 second source; field about 61 × 7.6 mm along the body's length).
+8. **Audio clock domain:** one domain per HAT, on the device's DAC clock, holds only if the first T1 prototype runs the HAT port's transmit and receive from the DAC's clock (ADR 0002). If the test fails, the second domain returns on reserved contacts. Two of the nine L2-or-lower reserved contacts leave L2 at 7 of 60 (11.7 %), above 8 %: this is why the field grew to 4 × 25 (ADR 0002 amendment).
 9. **DLN2 USB ID** used by OpenDAP firmware, and its upstream submission (§6.3).
 10. **Capability manifest schema** (HCS-009): how a HAT declares its USB functions, GPIO use and audio formats.
 11. **Conformance suites per level** (ADR 0003, toolkit-verify).
 
 ## 11. Sources
 
-- HAT Case Standard requirements: [`../requirements/README.md`](../requirements/README.md); [ADR 0001](../adr/0001-all-pogo-interface-with-fixed-device-side-piece.md); [ADR 0002](../adr/0002-interface-v1-native-high-speed-management-over-usb.md); [ADR 0003](../adr/0003-compatibility-levels.md).
+- HAT Case Standard requirements: [`../requirements/README.md`](../requirements/README.md); [ADR 0001](../adr/0001-all-pogo-interface-with-fixed-device-side-piece.md); [ADR 0002](../adr/0002-interface-v1-native-high-speed-management-over-usb.md); [ADR 0003](../adr/0003-compatibility-levels.md); [ADR 0004](../adr/0004-pogo-part-and-field-geometry.md).
 - [HAT interface v0](interface-v0.md) (superseded).
-- [Interface reduction research](../research/2026-10-interface-reduction.md) (§3 USB classes and bridges, §4 justification per removal, §6 reference HATs); [HAT interconnect benchmark](../research/2026-10-hat-interconnect-benchmark.md) (pogo grid and validation plan).
+- [Interface reduction research](../research/2026-10-interface-reduction.md) (§3 USB classes and bridges, §4 justification per removal, §6 reference HATs); [HAT interconnect benchmark](../research/2026-10-hat-interconnect-benchmark.md) (pogo grid and validation plan); [pogo part and geometry research](../research/2026-10-pogo-part-and-geometry.md).
 - Board repository: [pin plan §4.3](https://github.com/opendap-project/board/blob/main/docs/research/2026-10-pin-multiplexing-v0.md) (T1 mapping), [high-speed I/O topology](https://github.com/opendap-project/board/blob/main/docs/research/2026-10-high-speed-io-topology.md), [BOM v1](https://github.com/opendap-project/board/blob/main/docs/specs/bom-v1.md) (lines 66–69, 102), [power tree v0](https://github.com/opendap-project/board/blob/main/docs/specs/power-tree-v0.md) (§4.6, §4.10).
 - Parts library: `Hirose/DF40C-100DS-DP-0.4V.md` (DF40 catalog 2020: 0.3 A per contact, corner hold-downs), `Harwin/P70-1000045R.md` (drawing P70-10X0045R issue 4: 2.0 A, 0.88 N ± 0.29 N, Ø 2.20 mm pad).

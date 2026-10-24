@@ -32,7 +32,7 @@ Requirements for the HAT Case Standard.
 
 ## Open questions
 
-- Exposed port set and pinout: the [HAT interface v1](../specs/interface-v1.md) (Draft, superseding v0) defines the contacts by level and function, with positions on the pogo field and the flat-cable connectors; the pogo pitch and part are still open.
+- Exposed port set and pinout: the [HAT interface v1](../specs/interface-v1.md) (Draft, superseding v0) defines the contacts by level and function, with positions on the pogo field and the flat-cable connectors. The pogo part and pitch are decided ([ADR 0004](../adr/0004-pogo-part-and-field-geometry.md)); the place of the four added L2 reserved positions is still open (interface v1 §10).
 - Mechanical details of the device-side piece and the HAT case.
 
 ## Context
@@ -40,7 +40,7 @@ Requirements for the HAT Case Standard.
 - HCS-017 and HCS-024 (maintainers, 2026-10-22): the standard is OpenDAP's own; compatibility with Raspberry Pi HAT+ and other standards is a *should*, not a constraint.
 - HCS-022 is must since 2026-10-22 ([priority audit](https://github.com/opendap-project/t1/blob/main/docs/research/2026-10-requirement-priorities.md)): contacts cannot be added once third parties build HATs.
 - The connection from the board to a HAT has two stages: a flat cable from the board to the device-side piece of the HAT case, then from that piece to the HAT hardware.
-- The second stage is all pogo pins ([ADR 0001](../adr/0001-all-pogo-interface-with-fixed-device-side-piece.md)). The benchmark estimates about 120–128 contacts; two rows would be about 81 mm long, more than the device width, so its proposal is a 4 × 32 grid at 1.27 mm (about 41 × 4 mm). Grid, pitch and pinout are not defined yet.
+- The second stage is all pogo pins ([ADR 0001](../adr/0001-all-pogo-interface-with-fixed-device-side-piece.md)). The benchmark estimates about 120–128 contacts; two rows would be about 81 mm long, more than the device width, so its proposal is a 4 × 32 grid at 1.27 mm (about 41 × 4 mm). Note (2026-10-24): superseded. Interface v1 reduced the count, the ADR 0002 amendment set a 4 × 25 = 100 field, and [ADR 0004](../adr/0004-pogo-part-and-field-geometry.md) fixes it at 2.54 mm along the body's length with Harwin P70 springs and Mill-Max 0965 as the second source; the pinout is in [interface v1](../specs/interface-v1.md).
 - The flat cable from the board to the device-side piece is specified by the `board` repository.
 - HCS-014 to HCS-018: Adopted from the earlier experiments on 2026-10-21 as **Draft**: consistent with the decisions already taken and with the product philosophy, pending the maintainers' confirmation. Part availability still has to be checked against the sourcing rule (T1-010).
 - Not adopted from the experiments: their 42-contact connector (Raspberry Pi 40 pins + GND + PRESENT#) carried no PCIe or camera lanes, which conflicts with HCS-004 and HCS-006.
