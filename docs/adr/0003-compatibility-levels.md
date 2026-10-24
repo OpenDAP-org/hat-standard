@@ -2,6 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-22
+- **Amended by:** [ADR 0005](0005-interface-v1-1-shared-extension-and-contact-reduction.md) (2026-10-24): L2 without line out, SWD as a GPIO alternate; L3 is one shared extension, PCIe or CSI-2 by declared function.
 - **Decided by:** Claude, following the maintainers' direction ("several compatibility layers, L1–L3, like popular standards; USB 3 as the base, CSI and PCIe at other levels")
 
 ## Context

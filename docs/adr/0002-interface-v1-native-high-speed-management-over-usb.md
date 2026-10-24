@@ -2,6 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-22
+- **Amended by:** [ADR 0005](0005-interface-v1-1-shared-extension-and-contact-reduction.md) (2026-10-24): line out and dedicated SWD removed, one DF40 100 per cable end, 4 × 17 field.
 - **Decided by:** Claude, under the maintainers' delegation (HCS-021 hardware-agnostic, HCS-022 reserved contacts, build on standards, BRD-049 safe power)
 
 ## Context

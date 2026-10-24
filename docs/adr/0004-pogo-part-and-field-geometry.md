@@ -2,6 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-10-22
+- **Amended by:** [ADR 0005](0005-interface-v1-1-shared-extension-and-contact-reduction.md) (2026-10-24): the field is 4 × 17 = 68 with pairs along the rows; part, second source and pitch unchanged.
 - **Decided by:** Claude, under the maintainers' delegation (availability first with a second source, small-cost rule, safe power)
 
 ## Context
